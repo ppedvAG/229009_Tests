@@ -18,5 +18,12 @@
 
             Assert.Equal(result, oh.IsOpen(dt));
         }
+
+        [Fact]
+        public void Wed()
+        {
+            var oh = new OpeningHours();
+            oh.IsOpen(new DateTime(2023, 8, 16));
+        }
     }
 }

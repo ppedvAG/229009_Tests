@@ -22,6 +22,8 @@
 
         public bool IsOpen(DateTime dateTime)
         {
+            //if (dateTime.DayOfWeek == DayOfWeek.Wednesday) { return false; }
+
             if (schedule.TryGetValue(dateTime.DayOfWeek, out List<(TimeSpan, TimeSpan)> openingHours))
             {
                 foreach (var (start, end) in openingHours)
