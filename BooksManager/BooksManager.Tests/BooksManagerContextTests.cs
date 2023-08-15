@@ -1,6 +1,10 @@
+using AutoFixture;
+using AutoFixture.Kernel;
 using BooksManager.Data;
 using BooksManager.Model;
 using FluentAssertions;
+using System.Reflection;
+using System.Windows.Documents;
 
 namespace BooksManager.Tests
 {
@@ -103,5 +107,48 @@ namespace BooksManager.Tests
                 loaded.Should().BeNull();
             }
         }
+
+
+        [Fact]
+        [Trait("", "Integration")]
+        public void Can_create_Book_with_AutoFixture()
+        {
+            var fix = new Fixture();
+            fix.Behaviors.Add(new OmitOnRecursionBehavior());
+            fix.Customizations.Add(new PropertyNameOmitter("Id"));
+            var book = fix.Create<Book>();
+
+            using (var con = new BooksManagerContext(conString))
+            {
+                con.Database.EnsureCreated();
+                con.Books.AddRange(book);
+                con.SaveChanges();
+            }
+
+            using (var con = new BooksManagerContext(conString))
+            {
+                var loaded = con.Books.Find(book.Id);
+                loaded.Should().BeEquivalentTo(book, x => x.IgnoringCyclicReferences());
+            }
+        }
     }
+    internal class PropertyNameOmitter : ISpecimenBuilder
+    {
+        private readonly IEnumerable<string> names;
+
+        internal PropertyNameOmitter(params string[] names)
+        {
+            this.names = names;
+        }
+
+        public object Create(object request, ISpecimenContext context)
+        {
+            var propInfo = request as PropertyInfo;
+            if (propInfo != null && names.Contains(propInfo.Name))
+                return new OmitSpecimen();
+
+            return new NoSpecimen();
+        }
+    }
+
 }
