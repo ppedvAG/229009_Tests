@@ -1,5 +1,6 @@
 using BooksManager.Data;
 using BooksManager.Model;
+using FluentAssertions;
 
 namespace BooksManager.Tests
 {
@@ -16,7 +17,7 @@ namespace BooksManager.Tests
 
             var result = con.Database.EnsureCreated();
 
-            Assert.True(result);
+            result.Should().BeTrue();
         }
 
         [Fact]
@@ -30,7 +31,7 @@ namespace BooksManager.Tests
             con.Books.Add(book);
             var result = con.SaveChanges();
 
-            Assert.Equal(1, result);
+            result.Should().Be(1);
         }
 
         [Fact]
@@ -47,10 +48,7 @@ namespace BooksManager.Tests
 
             using (var con = new BooksManagerContext(conString))
             {
-
-                var loaded = con.Books.Find(book.Id);
-
-                Assert.Equal(loaded.Title, book.Title);
+                con.Books.Find(book.Id).Title.Should().Be(book.Title);
             }
         }
 
@@ -71,14 +69,12 @@ namespace BooksManager.Tests
             {
                 var loaded = con.Books.Find(book.Id);
                 loaded.Title = newTitle;
-                var rows = con.SaveChanges();
-                Assert.Equal(1, rows);
+                con.SaveChanges().Should().Be(1);
             }
 
             using (var con = new BooksManagerContext(conString))
             {
-                var loaded = con.Books.Find(book.Id);
-                Assert.Equal(loaded.Title, newTitle);
+                con.Books.Find(book.Id).Title.Should().Be(newTitle);
             }
         }
 
@@ -98,14 +94,13 @@ namespace BooksManager.Tests
             {
                 var loaded = con.Books.Find(book.Id);
                 con.Remove(loaded);
-                var rows = con.SaveChanges();
-                Assert.Equal(1, rows);
+                var rows = con.SaveChanges().Should().Be(1);
             }
 
             using (var con = new BooksManagerContext(conString))
             {
                 var loaded = con.Books.Find(book.Id);
-                Assert.Null(loaded);
+                loaded.Should().BeNull();
             }
         }
     }
