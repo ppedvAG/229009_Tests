@@ -40,6 +40,30 @@ namespace BooksManager.Tests
             result.Name.Should().Be(a2.Name);
         }
 
+
+        [Fact]
+        public void GetAuthorWithMostPages_all_same_PageCount_but_sorted_by_name()
+        {
+            var a1 = new Author() { Name = "Fred" };
+            a1.Books.Add(new Book() { Pages = 200 });
+
+            var a2 = new Author() { Name = "Barney" };
+            a2.Books.Add(new Book() { Pages = 100 });
+            a2.Books.Add(new Book() { Pages = 100 });
+
+            var a3 = new Author() { Name = "Wilma" };
+            a3.Books.Add(new Book() { Pages = 200 });
+
+            var repo = Substitute.For<IRepository>();
+            repo.GetAll<Author>().Returns(new[] { a1, a2, a3 });
+
+            var bs = new BooksService(repo);
+
+            var result = bs.GetAuthorWithMostPages();
+
+            result.Name.Should().Be(a2.Name);
+        }
+
         [Fact]
         public void GetAuthorWithMostPages_empty_db_should_return_null()
         {
@@ -50,6 +74,18 @@ namespace BooksManager.Tests
             var result = bs.GetAuthorWithMostPages();
 
             result.Should().BeNull();
+        }
+
+        [Fact]
+        public void GetAuthorWithMostPages_no_save()
+        {
+            var repo = Substitute.For<IRepository>();
+            repo.GetAll<Author>().Returns(new List<Author>());
+            var bs = new BooksService(repo);
+
+            var result = bs.GetAuthorWithMostPages();
+
+            repo.DidNotReceive().SaveAll();
         }
 
     }

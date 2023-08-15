@@ -17,10 +17,12 @@ namespace BooksManager.Logic
 
         public Author? GetAuthorWithMostPages()
         {
+            //repository.SaveAll();
             return repository.GetAll<Author>()
                              .OrderByDescending(x => x.Books.Sum(y => y.Pages))
                              .ThenBy(x => x.Name)
                              .FirstOrDefault();
+
         }
     }
 }
