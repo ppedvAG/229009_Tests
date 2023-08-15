@@ -20,5 +20,6 @@ namespace BooksManager.Data
             optionsBuilder.UseSqlServer(conString)
                           .UseLazyLoadingProxies();
         }
+
     }
 }
