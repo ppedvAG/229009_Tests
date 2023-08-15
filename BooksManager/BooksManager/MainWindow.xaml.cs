@@ -1,4 +1,5 @@
 ﻿using BooksManager.Data;
+using BooksManager.Model;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,17 +19,17 @@ namespace BooksManager
     public partial class MainWindow : Window
     {
         readonly string conString = "Server=(localdb)\\mssqllocaldb;Database=BooksManager_tests;Trusted_Connection=true";
-        BooksManagerContext con;
+        IRepository repository;
 
         public MainWindow()
         {
             InitializeComponent();
-            con = new BooksManagerContext(conString);
+            repository = new EfCoreRepository(conString);
         }
 
         private void LoadBooks(object sender, RoutedEventArgs e)
         {
-            myGrid.ItemsSource = con.Books.ToList();
+            myGrid.ItemsSource = repository.GetAll<Book>();
         }
     }
 }
