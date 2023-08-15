@@ -6,7 +6,7 @@ namespace BooksManager.Tests
 {
     public class BooksManagerContextTests
     {
-        string conString = "Server=(localdb)\\mssqllocaldb;Database=BooksManager_tests;Trusted_Connection=true";
+        readonly string conString = "Server=(localdb)\\mssqllocaldb;Database=BooksManager_tests;Trusted_Connection=true";
 
         [Fact]
         [Trait("", "Integration")]
