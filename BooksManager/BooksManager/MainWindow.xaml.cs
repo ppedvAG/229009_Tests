@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using BooksManager.Data;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -16,9 +17,18 @@ namespace BooksManager
     /// </summary>
     public partial class MainWindow : Window
     {
+        readonly string conString = "Server=(localdb)\\mssqllocaldb;Database=BooksManager_tests;Trusted_Connection=true";
+        BooksManagerContext con;
+
         public MainWindow()
         {
             InitializeComponent();
+            con = new BooksManagerContext(conString);
+        }
+
+        private void LoadBooks(object sender, RoutedEventArgs e)
+        {
+            myGrid.ItemsSource = con.Books.ToList();
         }
     }
 }

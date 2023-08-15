@@ -8,7 +8,7 @@
         Title="BooksManager v0.1" Height="450" Width="800">
     <DockPanel>
         <WrapPanel DockPanel.Dock="Top" Margin="4">
-            <Button>Laden</Button>
+            <Button Click="LoadBooks">Laden</Button>
             <Button>Speichern</Button>
             <Button>Neu</Button>
             <Button>Löschen</Button>

@@ -4,7 +4,8 @@ using BooksManager.Data;
 using BooksManager.Model;
 using FluentAssertions;
 using System.Reflection;
-using System.Windows.Documents;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace BooksManager.Tests
 {
@@ -127,7 +128,9 @@ namespace BooksManager.Tests
 
             using (var con = new BooksManagerContext(conString))
             {
-                var loaded = con.Books.Find(book.Id);
+                //var loaded = con.Books.Include(x => x.Authors).FirstOrDefault(x => x.Id == book.Id);// eager Loading
+                var loaded = con.Books.FirstOrDefault(x => x.Id == book.Id);// lazy Loading
+
                 loaded.Should().BeEquivalentTo(book, x => x.IgnoringCyclicReferences());
             }
         }
